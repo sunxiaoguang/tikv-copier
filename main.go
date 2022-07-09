@@ -23,7 +23,7 @@ var (
 	sourceMode      = flag.String("source-mode", "txn", "source tikv mode: txn or raw")
 	targetTiKV      = flag.String("target-tikv", "", "target tikv address")
 	targetMode      = flag.String("target-mode", "txn", "target tikv mode: txn or raw")
-	stateFile       = flag.String("state-file", "state.json", "file to record copy state for resume")
+	stateFile       = flag.String("state-file", "state.json", "file to record intermediate state")
 	batchSize       = flag.Int("batch-size", 10000, "batch size")
 	checkpointSize  = flag.Int("checkpoint-size", 1000000, "checkpoint size")
 	backupStateFile = ""
