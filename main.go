@@ -107,8 +107,9 @@ func (c *client) write(ctx context.Context, keys, values [][]byte) error {
 }
 
 type CopyState struct {
-	StartKey []byte `json:"start_key,omitempty"`
-	Finished uint64 `json:"finished"`
+	StartKey   []byte `json:"start_key,omitempty"`
+	Finished   uint64 `json:"finished"`
+	Throughput uint64 `json:"throughput"`
 }
 
 func runBatch(ctx context.Context, src, target *client, state *CopyState) (int, error) {
@@ -131,6 +132,7 @@ func runBatch(ctx context.Context, src, target *client, state *CopyState) (int, 
 
 func run(ctx context.Context, src, target *client, state *CopyState) (int, error) {
 	records := 0
+	start := time.Now()
 	for {
 		if batch, err := runBatch(ctx, src, target, state); err != nil {
 			return records, err
@@ -145,6 +147,11 @@ func run(ctx context.Context, src, target *client, state *CopyState) (int, error
 		}
 	}
 	state.Finished += uint64(records)
+	if records > 0 {
+		state.Throughput = uint64(float64(records) / time.Now().Sub(start).Seconds())
+	} else {
+		state.Throughput = 0
+	}
 	return records, nil
 }
 
@@ -199,6 +206,7 @@ func main() {
 				}
 				break
 			}
+			log.Info("Migration checkpoint", zap.Uint64("throughput", state.Throughput), zap.Uint64("total", state.Finished))
 			backoff = time.Second
 			bits, _ := json.Marshal(state)
 
