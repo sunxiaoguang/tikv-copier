@@ -1,5 +1,5 @@
 ### When to use this tool
-The tool copy data between TiKV clusters by scanning data from source and writing to target. Although it's slow by nature, it can copy all kind of data which TiDB BR wouldn't address. In addition, it coverts data between TxnKV and RawKV during copying which can be helpful.
+The tool can copy data between TiKV clusters by scanning data from source and writing to target. Although it's slow by nature, it can copy all kind of data which TiDB BR wouldn't address. In addition, it coverts data between TxnKV and RawKV during copying which can be helpful.
 
 ### Limitations
 * Do not guarantee global consistency
